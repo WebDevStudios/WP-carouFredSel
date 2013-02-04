@@ -73,7 +73,13 @@ function wds_caroufredsel( $element = false, $caroufredsel_params = array() ) {
 
 	wp_enqueue_script( 'caroufredsel-init' );
 	// send data to caroufredsel
-	wp_localize_script( 'caroufredsel-init', 'wdscaroufredsel', array( 'element' => $element, 'params' => $caroufredsel_params ) );
+
+	$data = array( 'element' => $element );
+
+	if ( !empty( $caroufredsel_params ) )
+		$data['params'] = $caroufredsel_params;
+
+	wp_localize_script( 'caroufredsel-init', 'wdscaroufredsel', $data );
 }
 
 function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = false, $use_transient = true ) {
