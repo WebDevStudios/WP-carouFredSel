@@ -26,8 +26,8 @@ class WDSCarouFredSel {
 		if ( !$include_cpt )
 			return;
 		// Snippet Post-Type Setup
-		if ( !class_exists( 'CPT_Setup' ) )
-			require_once( WDSCFS_PATH .'lib/CPT_Setup.php' );
+		if ( !class_exists( 'WDSCPT_Setup' ) )
+			require_once( WDSCFS_PATH .'lib/WDSCPT_Setup.php' );
 		require_once( WDSCFS_PATH .'lib/Featured_CPT_Setup.php' );
 		$this->cpt = new Featured_CPT_Setup();
 	}

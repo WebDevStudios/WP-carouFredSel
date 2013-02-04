@@ -3,7 +3,7 @@
  * Plugin class for generating Custom Post Types.
  *
  */
-class CPT_Setup {
+class WDSCPT_Setup {
 
 	private $post_type;
 	public $single;
@@ -24,8 +24,8 @@ class CPT_Setup {
 	static $instance;
 
 
-	function CPT_Setup( $post_type, $plural = '', $registered = '', $args = array() ) {
-		CPT_Setup::__construct( $post_type, $plural, $registered, $args );
+	function WDSCPT_Setup( $post_type, $plural = '', $registered = '', $args = array() ) {
+		WDSCPT_Setup::__construct( $post_type, $plural, $registered, $args );
 	}
 
 	function __construct( $post_type, $plural = '', $registered = '', $args = array() ) {

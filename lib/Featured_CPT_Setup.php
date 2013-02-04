@@ -3,7 +3,7 @@
  * Plugin class that registers the Featured CPT.
  *
  */
-class Featured_CPT_Setup extends CPT_Setup {
+class Featured_CPT_Setup extends WDSCPT_Setup {
 
 	/**
 	 * Holds copy of instance, so other plugins can remove our hooks.
@@ -21,7 +21,7 @@ class Featured_CPT_Setup extends CPT_Setup {
 
 		self::$instance = $this;
 
-		$this->CPT_Setup( 'Featured Entry', 'Featured Entries', null, array(
+		$this->WDSCPT_Setup( 'Featured Entry', 'Featured Entries', null, array(
 			'public' => false,
 			'exclude_from_search' => true,
 			'menu_position' => 5,
