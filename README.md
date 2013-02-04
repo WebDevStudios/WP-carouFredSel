@@ -29,30 +29,40 @@ To enable a featured custom post type:
 wds_enable_cfs_cpt();
 ```
 
+To grab data (wrapped in a transient) from the featured custom post type:
+```php
+wds_fcs_get_featured();
+```
+
+wds_fcs_get_featured() takes 3 arguments:
+
+$WP_Query_args: pass any WP_Query arguments you want that aren't in the default
+Default: array(
+	'post_type' => 'featured-entries',
+	'posts_per_page' => 5,
+	'post_status'    => 'publish',
+	'no_found_rows'  => true,
+)
+
+$return_full_query: whether to return the query from WP_Query or a subset of the data (Title, link meta, content, and featured image)
+Default: false (return the subset of data instead of the full query)
+
+$use_transient: Whether to wrap data in a transient to save on load time and queries to the database. The transient resets when a featured entry is saved in the admin.
+Default: true (use transient)
+
 To grab data (wrapped in a transient) from featured custom post type and then display it in a carouFredSel instance:
 ```php
+// Assumes you have 'wds_enable_cfs_cpt();' in your themes functions file.
+
 /**
  * Enqueu carouFredSel and loop through our featured posts
  */
 function dma_loop_featured() {
+
 	$featured = wds_fcs_get_featured();
+	// if our query is empty, bail here
 	if ( !$featured )
 		return;
-
-	wds_caroufredsel( '.wds-featured', array(
-		'width' => 572,
-		'items' => 1,
-		'scroll' => 1,
-		'scroll' => array(
-			'fx' => 'crossfade'
-		),
-		'auto' => array(
-			'easing' => 'linear',
-			'duration' => 1000,
-			'timeoutDuration' => 2000,
-			'pauseOnHover' => true
-		),
-	) );
 	?>
 	<div class="wds-featured-wrap">
 		<ul class="wds-featured">
@@ -73,6 +83,22 @@ function dma_loop_featured() {
 	</div><!-- .wds-featured-wrap -->
 
 	<?php
+	// enqueue carouFredSel and configure its options
+	wds_caroufredsel( '.wds-featured', array(
+		'width' => 572,
+		'items' => 1,
+		'scroll' => 1,
+		'scroll' => array(
+			'fx' => 'crossfade'
+		),
+		'auto' => array(
+			'easing' => 'linear',
+			'duration' => 1000,
+			'timeoutDuration' => 2000,
+			'pauseOnHover' => true
+		),
+	) );
+
 }
 
 /**
