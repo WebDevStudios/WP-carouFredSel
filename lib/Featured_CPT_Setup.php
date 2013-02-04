@@ -112,6 +112,8 @@ class Featured_CPT_Setup extends CPT_Setup {
 		$to_save = !empty( $url ) ? esc_url( $url ) : '';
 		// update our post
 		update_post_meta( $post_id, $this->field, $to_save );
+		// delete our cpt query transient if it exists
+		delete_transient( 'wds_cfs_cpt_data' );
 	}
 
 	public function icons() {

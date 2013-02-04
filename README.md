@@ -17,9 +17,9 @@ wds_caroufredsel( '#element' );
 To pass configuration parameters to the carouFredSel instance:
 ```php
 $args = array(
-	width => 870,
-	items => 8,
-	scroll => 4
+	'width' => 870,
+	'items' => 8,
+	'scroll' => 4
 );
 wds_caroufredsel( '#element', $args );
 ```
