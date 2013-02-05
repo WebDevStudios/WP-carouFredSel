@@ -58,7 +58,9 @@ Default: true (use transient)
  * Enqueu carouFredSel and loop through our featured posts
  */
 function dma_loop_featured() {
-
+	// make sure our plugin is activated
+	if ( !function_exists('wds_fcs_get_featured') )
+		return;
 	$featured = wds_fcs_get_featured();
 	// if our query is empty, bail here
 	if ( !$featured )
@@ -119,5 +121,3 @@ function wds_maybe_link( $feature, $index, $wrap = false ) {
 	return $html;
 }
 ```
-
-
