@@ -56,7 +56,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 			break;
 			case 'featured_thumbnail':
 				echo '<a style="position: relative;" href="'. get_edit_post_link() .'">';
-					the_post_thumbnail();
+					the_post_thumbnail( 'medium' );
 				echo '</a>';
 			break;
 		}
