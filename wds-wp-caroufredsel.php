@@ -21,15 +21,16 @@ class WDSCarouFredSel {
 		add_action( 'init', array( $this, 'scripts_styles' ) );
 
 		// include a featured content cpt (off by default)
-		$include_cpt = get_option( 'wdscaroufredsel_cpt' ) ? true : false;
+		$include_cpt = wds_cfs_cpt_option();
 
 		if ( !$include_cpt )
 			return;
-		// Snippet Post-Type Setup
+		// Featured Post-Type Setup
 		if ( !class_exists( 'WDSCPT_Setup' ) )
 			require_once( WDSCFS_PATH .'lib/WDSCPT_Setup.php' );
-		require_once( WDSCFS_PATH .'lib/Featured_CPT_Setup.php' );
-		$this->cpt = new Featured_CPT_Setup();
+		if ( !class_exists( 'Featured_CPT_Setup' ) )
+			require_once( WDSCFS_PATH .'lib/Featured_CPT_Setup.php' );
+		$this->cpt = new Featured_CPT_Setup( $include_cpt );
 	}
 
 	public function scripts_styles() {
@@ -41,16 +42,45 @@ class WDSCarouFredSel {
 new WDSCarouFredSel;
 
 /**
+ * Gets cpt registration option only once per page
+ */
+function wds_cfs_cpt_option( $set = false ) {
+	$key = 'wds_cfs_cpt_option';
+	$option = &$GLOBALS[$key];
+	if ( !$set ) {
+		// check global first
+		if ( isset( $option ) )
+			return $option;
+		// check transient second
+		$option = get_transient( $key );
+		if ( $option )
+			return $option;
+	}
+	// get option third
+	$option = get_option( 'wdscaroufredsel_cpt' );
+	// and save our transient (week)
+	set_transient( $key, $option, 60*60*24*7 );
+	return $option;
+}
+
+/**
  * enable/disable a featured content cpt
  */
 function wds_enable_cfs_cpt( $enable = true ) {
 	if ( !is_admin() )
 		return;
-
-	if ( $enable && !get_option( 'wdscaroufredsel_cpt' ) )
-		update_option( 'wdscaroufredsel_cpt', true );
-	elseif ( !$enable )
+	// delete option to include cpt
+	if ( !$enable ) {
 		delete_option( 'wdscaroufredsel_cpt', true );
+		wds_cfs_cpt_option( true );
+		return;
+	}
+
+	if ( !get_option( 'wdscaroufredsel_cpt' ) ) {
+		$enable = is_array( $enable ) ? $enable : true;
+		update_option( 'wdscaroufredsel_cpt', $enable );
+		wds_cfs_cpt_option( true );
+	}
 }
 
 function wds_caroufredsel( $element = false, $caroufredsel_params = array() ) {
@@ -84,7 +114,7 @@ function wds_caroufredsel( $element = false, $caroufredsel_params = array() ) {
 
 function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = false, $use_transient = true ) {
 	// if the cpt isn't enabled
-	if ( !get_option( 'wdscaroufredsel_cpt' ) )
+	if ( !$include_cpt = wds_cfs_cpt_option() )
 		return false;
 
 	$trans = false;
@@ -96,9 +126,11 @@ function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = fa
 		// return it
 		return $trans;
 
+	// get cpt slug or use default
+	$post_type = isset( $include_cpt['post_type'] ) ? $include_cpt['post_type'] : 'featured-entries';
 	// get our query with our merged arguments
 	$query = new WP_Query( wp_parse_args( $WP_Query_args, array(
-		'post_type' => 'featured-entries',
+		'post_type' => $post_type,
 		'posts_per_page' => 5,
 		'post_status'    => 'publish',
 		'no_found_rows'  => true,

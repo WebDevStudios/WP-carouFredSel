@@ -17,16 +17,25 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 	private $nonce = 'wdsfeatured_link';
 	private $field = '_wdsfeatured_link';
 
-	function __construct() {
+	function __construct( $newargs = array() ) {
 
 		self::$instance = $this;
 
-		$this->WDSCPT_Setup( 'Featured Entry', 'Featured Entries', null, array(
-			'public' => false,
-			'exclude_from_search' => true,
-			'menu_position' => 5,
-			'supports' => array( 'title', 'editor', 'thumbnail', 'page-attributes' )
+		$newargs = is_array( $newargs ) ? $newargs : array();
+
+		$args = wp_parse_args( $newargs, array(
+			'post_type' => 'Featured Entry',
+			'plural' => 'Featured Entries',
+			'registered' => null,
+			'post_type_args' => array(
+				'public' => false,
+				'exclude_from_search' => true,
+				'menu_position' => 5,
+				'supports' => array( 'title', 'editor', 'thumbnail', 'page-attributes' )
+			)
 		) );
+
+		$this->WDSCPT_Setup( $args['post_type'], $args['plural'], $args['registered'], $args['post_type_args'] );
 
 		add_filter( 'enter_title_here', array( $this, 'title' ) );
 		add_filter( 'manage_edit-'. $this->slug .'_columns',  array( $this, 'columns' ) );
