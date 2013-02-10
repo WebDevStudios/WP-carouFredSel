@@ -113,20 +113,32 @@ function wds_caroufredsel( $element = false, $caroufredsel_params = array() ) {
 }
 
 function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = false, $use_transient = true ) {
-	// if the cpt isn't enabled
+
+	// if the cpt isn't enabled then bail
 	if ( !$include_cpt = wds_cfs_cpt_option() )
 		return false;
+
+	// Check query var to bypass/reset transients
+	$bypass = ( isset( $_GET['delete-trans'] ) && $_GET['delete-trans'] == true );
+	$use_transient = $bypass ? false : $use_transient;
+
+	$trans_id = 'wds_cfs_cpt_data';
+	// look for and append a suffix if independent transients are required (passed as an arg)
+	if ( isset( $WP_Query_args['trans_id'] ) ) {
+		$trans_id .= '_'. $WP_Query_args['trans_id'];
+		unset( $WP_Query_args['trans_id'] );
+	}
 
 	$trans = false;
 	// if we're using a transient
 	if ( $use_transient )
-		$trans = get_transient( 'wds_cfs_cpt_data' );
+		$trans = get_transient( $trans_id );
 	// and we found a transient
 	if ( $trans )
 		// return it
 		return $trans;
 
-	// get cpt slug or use default
+	// get registered cpt slug or use default
 	$post_type = isset( $include_cpt['post_type'] ) ? $include_cpt['post_type'] : 'featured-entries';
 	// get our query with our merged arguments
 	$query = new WP_Query( wp_parse_args( $WP_Query_args, array(
@@ -140,8 +152,8 @@ function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = fa
 		return false;
 	// if the full query is requested, return it
 	if ( $return_full_query ) {
-		if ( $use_transient )
-			set_transient( 'wds_cfs_cpt_data', $query, 60*60*24 );
+		if ( $use_transient || $bypass )
+			set_transient( $trans_id, $query, 60*60*24 );
 		return $query;
 	}
 
@@ -161,9 +173,9 @@ function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = fa
 	endwhile;
 	wp_reset_postdata();
 
-	// save our transient
-	if ( $use_transient )
-		set_transient( 'wds_cfs_cpt_data', $data, 60*60*24 );
+	// save our transient (1 day)
+	if ( $use_transient || $bypass )
+		set_transient( $trans_id, $data, 60*60*24 );
 
 	// return our arrayed data
 	return $data;
