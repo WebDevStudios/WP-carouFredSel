@@ -30,7 +30,7 @@ class WDSCarouFredSel {
 			require_once( WDSCFS_PATH .'lib/WDSCPT_Setup.php' );
 		if ( !class_exists( 'Featured_CPT_Setup' ) )
 			require_once( WDSCFS_PATH .'lib/Featured_CPT_Setup.php' );
-		$this->cpt = new Featured_CPT_Setup( $include_cpt );
+		$GLOBALS['wds_cfs_featured_cpt'] = new Featured_CPT_Setup( $include_cpt );
 	}
 
 	public function scripts_styles() {
@@ -139,7 +139,7 @@ function wds_fcs_get_featured( $WP_Query_args = array(), $return_full_query = fa
 		return $trans;
 
 	// get registered cpt slug or use default
-	$post_type = isset( $include_cpt['post_type'] ) ? $include_cpt['post_type'] : 'featured-entries';
+	$post_type = isset( $GLOBALS['wds_cfs_featured_cpt']->slug ) ? $GLOBALS['wds_cfs_featured_cpt']->slug : 'featured-entries';
 	// get our query with our merged arguments
 	$query = new WP_Query( wp_parse_args( $WP_Query_args, array(
 		'post_type' => $post_type,

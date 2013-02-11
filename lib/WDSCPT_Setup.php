@@ -47,7 +47,6 @@ class WDSCPT_Setup {
 		add_action( 'manage_posts_custom_column', array( &$this, 'columns_display' ) );
 		add_action( 'admin_head', array( &$this, 'cpt_icons' ) );
 
-
 	}
 
 	public function cpt_loop() {
