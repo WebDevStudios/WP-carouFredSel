@@ -98,6 +98,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 			<h4>Destination URL</h4>
 			<input style="width:40%;" type="text" name="<?php echo $this->field; ?>" id="featured_link" value="<?php echo esc_url( $link ); ?>" class="widefat" />
 			<p><em>Set a link for this <?php echo $this->single; ?>.</em></p>
+			<?php do_action( 'wdscaroufredsel_cpt_metabox' ); ?>
 		</label>
 		<?php
 	}
@@ -123,6 +124,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 		update_post_meta( $post_id, $this->field, $to_save );
 		// delete our cpt query transient if it exists
 		delete_transient( 'wds_cfs_cpt_data' );
+		do_action( 'wdscaroufredsel_cpt_metabox_save', $post_id );
 	}
 
 	public function set_admin_order( $query ) {
