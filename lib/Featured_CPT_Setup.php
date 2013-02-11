@@ -42,7 +42,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 		add_action( 'manage_posts_custom_column' ,  array( $this, 'displaycolumns' ) );
 		add_action( 'add_meta_boxes', array( $this, 'meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_link' ), 10, 2);
-		// add_action( 'admin_head', array( $this, 'icons' ) );
+		add_filter( 'pre_get_posts', array( $this, 'set_admin_order' ) );
 	}
 
 	function columns( $columns ){
@@ -97,7 +97,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 		<label>
 			<h4>Destination URL</h4>
 			<input style="width:40%;" type="text" name="<?php echo $this->field; ?>" id="featured_link" value="<?php echo esc_url( $link ); ?>" class="widefat" />
-			<p><em>Set a link for this featured entry</em></p>
+			<p><em>Set a link for this <?php echo $this->single; ?>.</em></p>
 		</label>
 		<?php
 	}
@@ -125,8 +125,11 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 		delete_transient( 'wds_cfs_cpt_data' );
 	}
 
-	public function icons() {
-
+	public function set_admin_order( $query ) {
+		if ( !is_admin() || $query->query['post_type'] != $this->slug )
+			return;
+		$query->set( 'orderby', 'menu_order' );
+		$query->set( 'order', 'ASC' );
 	}
 
 }
