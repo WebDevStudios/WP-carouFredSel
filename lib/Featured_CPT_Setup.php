@@ -98,9 +98,9 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 			<h4>Destination URL</h4>
 			<input style="width:40%;" type="text" name="<?php echo $this->field; ?>" id="featured_link" value="<?php echo esc_url( $link ); ?>" class="widefat" />
 			<p><em>Set a link for this <?php echo $this->single; ?>.</em></p>
-			<?php do_action( 'wdscaroufredsel_cpt_metabox' ); ?>
 		</label>
 		<?php
+		do_action( 'wdscaroufredsel_cpt_metabox' );
 	}
 
 	public function save_link( $post_id ) {
