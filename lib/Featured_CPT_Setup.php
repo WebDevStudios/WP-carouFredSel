@@ -46,7 +46,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 	}
 
 	function columns( $columns ){
-		$columns = array(
+		$newcolumns = array(
 			'cb' => '<input type="checkbox" />',
 			'title' => 'Title',
 			'date' => 'Date Published',
@@ -54,7 +54,7 @@ class Featured_CPT_Setup extends WDSCPT_Setup {
 			'featured_thumbnail' => 'Thumbnail',
 		);
 
-		return $columns;
+		return (array) apply_filters( 'wds_cfs_featured_cpt_cols', $newcolumns, $columns );
 	}
 
 	public function displaycolumns( $column ){
