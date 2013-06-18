@@ -34,7 +34,7 @@ class WDSCarouFredSel {
 	}
 
 	public function scripts_styles() {
-		wp_register_script( 'caroufredsel', WDSCFS_URL .'lib/js/carouFredSel/jquery.carouFredSel-6.2.1-packed', array('jquery'), '6.2.1' );
+		wp_register_script( 'caroufredsel', WDSCFS_URL .'lib/js/carouFredSel/jquery.carouFredSel-6.2.1-packed.js', array('jquery'), '6.2.1' );
 		wp_register_script( 'caroufredsel-init', WDSCFS_URL .'lib/js/caroufredsel-init.js', array( 'caroufredsel', 'jquery' ), '1.0' );
 	}
 
